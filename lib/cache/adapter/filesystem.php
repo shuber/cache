@@ -32,8 +32,7 @@ namespace Cache\Adapter {
             if (($cache_modified_at = $this->exists($key)) && (!$modified_at || $cache_modified_at >= $modified_at)) {
                 $value = $this->read($key);
             } else {
-                $value = $block();
-                $this->write($key, $value);
+                $value = $this->write($key, $block());
             }
             return $value;
         }
@@ -45,7 +44,8 @@ namespace Cache\Adapter {
         function write($key, $value) {
             $file = $this->filename_for_key($key);
             $this->create_cache_directory($file);
-            return file_put_contents($file, json_encode($value));
+            file_put_contents($file, json_encode($value));
+            return $value;
         }
 
         protected function create_cache_directory($file) {
