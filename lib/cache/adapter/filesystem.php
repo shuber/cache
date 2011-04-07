@@ -22,11 +22,15 @@ namespace Cache\Adapter {
         }
 
         function expired($key, $modified_at) {
-            return ($cache_modified_at = $this->exists($key)) && $cache_modified_at < $modified_at;
+            return $modified_at && $cache_modified_at = $this->exists($key) && $cache_modified_at < $modified_at;
         }
 
-        function fetch($key, $block) {
-            if ($this->exists($key)) {
+        function fetch($key, $modified_at = false, $block = null) {
+            if (is_a($modified_at, 'Closure')) {
+                $block = $modified_at;
+                $modified_at = false;
+            }
+            if (($cache_modified_at = $this->exists($key)) && (!$modified_at || $cache_modified_at >= $modified_at)) {
                 $value = $this->read($key);
             } else {
                 $value = $block();
