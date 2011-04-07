@@ -9,7 +9,6 @@ namespace Cache\Adapter {
         function __construct($path = '/tmp', $extension = '.json') {
             $this->path = $path;
             $this->extension = $extension;
-            $this->create_cache_directory();
         }
 
         function delete($key) {
@@ -45,11 +44,13 @@ namespace Cache\Adapter {
 
         function write($key, $value) {
             $file = $this->filename_for_key($key);
+            $this->create_cache_directory($file);
             return file_put_contents($file, json_encode($value));
         }
 
-        protected function create_cache_directory() {
-            if (!file_exists($this->path)) mkdir($this->path, 0755, true);
+        protected function create_cache_directory($file) {
+            $dir = dirname($file);
+            if (!file_exists($dir)) mkdir($dir, 0755, true);
         }
 
         protected function filename_for_key($key) {
