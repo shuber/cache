@@ -50,7 +50,7 @@ namespace Cache\Adapter {
 
         protected function create_cache_directory($file) {
             $dir = dirname($file);
-            if (!file_exists($dir)) mkdir($dir, 0755, true);
+            if (!file_exists($dir)) mkdir($dir, 0777, true);
         }
 
         protected function filename_for_key($key) {
