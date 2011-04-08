@@ -12,20 +12,20 @@ namespace Cache\Adapter {
         }
 
         function delete($key) {
-            if ($this->exists($key)) return unlink($this->filename_for_key($key));
+            if ($this->exists($key)) return unlink($this->file_for_key($key));
         }
 
         function exists($key) {
-            $filename = $this->filename_for_key($key);
-            return file_exists($filename) ? filemtime($filename) : false;
+            $file = $this->file_for_key($key);
+            return file_exists($file) ? filemtime($file) : false;
         }
 
         function read($key) {
-            return json_decode(file_get_contents($this->filename_for_key($key)));
+            return json_decode(file_get_contents($this->file_for_key($key)));
         }
 
         function write($key, $value) {
-            $file = $this->filename_for_key($key);
+            $file = $this->file_for_key($key);
             $this->create_cache_directory($file);
             file_put_contents($file, json_encode($value));
             return $value;
@@ -36,7 +36,7 @@ namespace Cache\Adapter {
             if (!file_exists($dir)) mkdir($dir, 0777, true);
         }
 
-        protected function filename_for_key($key) {
+        protected function file_for_key($key) {
             return $this->path.DIRECTORY_SEPARATOR.$key.$this->extension;
         }
 
