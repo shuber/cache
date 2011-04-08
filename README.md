@@ -9,8 +9,9 @@ A simple php caching library with swappable backends
 	
 	$cache->write('users', array('bob', 'joe', 'tim'));
 	print_r($cache->read('users'));
+	$cache->delete('users');
 	
-	// If a cache exists then it returns it, otherwise it executes the block and caches the result
-	echo $cache->fetch('admins', function() {
-		return Admin::all();
-	});
+	// If a fresh cache exists then it returns it, otherwise it executes the block (passing the current cache's modified time if there is one) and caches the result
+	print_r($cache->fetch('admins', function($modified_at) {
+	    return Admin::all();
+	}));

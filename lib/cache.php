@@ -27,7 +27,7 @@ class Cache {
         if (($cache_modified_at = $this->adapter->exists($key)) && (!$modified_at || $cache_modified_at >= $modified_at)) {
             $value = $this->adapter->read($key);
         } else {
-            $value = $this->adapter->write($key, $block());
+            $value = $this->adapter->write($key, $block($cache_modified_at));
         }
         return $value;
     }
