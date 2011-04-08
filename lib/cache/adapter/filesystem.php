@@ -20,23 +20,6 @@ namespace Cache\Adapter {
             return file_exists($filename) ? filemtime($filename) : false;
         }
 
-        function expired($key, $modified_at) {
-            return $modified_at && $cache_modified_at = $this->exists($key) && $cache_modified_at < $modified_at;
-        }
-
-        function fetch($key, $modified_at = false, $block = null) {
-            if (is_a($modified_at, 'Closure')) {
-                $block = $modified_at;
-                $modified_at = false;
-            }
-            if (($cache_modified_at = $this->exists($key)) && (!$modified_at || $cache_modified_at >= $modified_at)) {
-                $value = $this->read($key);
-            } else {
-                $value = $this->write($key, $block());
-            }
-            return $value;
-        }
-
         function read($key) {
             return json_decode(file_get_contents($this->filename_for_key($key)));
         }
