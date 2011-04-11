@@ -12,7 +12,7 @@ namespace Cache\Adapter {
         }
 
         function delete($key) {
-            if ($this->exists($key)) return unlink($this->file_for_key($key));
+            return unlink($this->file_for_key($key));
         }
 
         function exists($key) {

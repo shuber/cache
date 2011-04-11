@@ -15,6 +15,10 @@ class Cache {
         return call_user_func_array(array($this->adapter, $method), $arguments);
     }
 
+    function delete($key) {
+        if ($this->exists($key)) return $this->adapter->delete($key);
+    }
+
     function expired($key, $modified_at) {
         return $cache_modified_at = $this->adapter->exists($key) && $cache_modified_at < $modified_at;
     }
@@ -24,10 +28,11 @@ class Cache {
             $block = $modified_at;
             $modified_at = false;
         }
-        if (($cache_modified_at = $this->adapter->exists($key)) && (!$modified_at || $cache_modified_at >= $modified_at)) {
-            $value = $this->adapter->read($key);
+        $cache_value = ($cache_modified_at = $this->adapter->exists($key)) ? $this->adapter->read($key) : null;
+        if ($cache_modified_at && (!$modified_at || $cache_modified_at >= $modified_at)) {
+            $value = $cache_value;
         } else {
-            $value = $this->adapter->write($key, $block($cache_modified_at));
+            $value = $this->adapter->write($key, $block($cache_modified_at, $cache_value));
         }
         return $value;
     }
