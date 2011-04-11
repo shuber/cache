@@ -5,6 +5,8 @@ namespace Cache\Adapter {
 
         public $storage = array();
 
+        function __construct() { }
+
         function delete($key) {
             unset($this->storage[$key]);
             return true;
