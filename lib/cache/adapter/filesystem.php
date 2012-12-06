@@ -28,6 +28,7 @@ namespace Cache\Adapter {
             $file = $this->file_for_key($key);
             $this->create_cache_directory($file);
             file_put_contents($file, json_encode($value));
+            chmod($file, 0777);
             return $value;
         }
 
